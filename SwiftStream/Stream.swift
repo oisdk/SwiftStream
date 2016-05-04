@@ -19,6 +19,7 @@ private extension SizeGuess {
     }
   }
 }
+
 extension SizeGuess: CustomStringConvertible {
   public var description: String {
     switch self {
