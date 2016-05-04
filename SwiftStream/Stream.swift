@@ -81,6 +81,15 @@ extension StatefulStream {
       return y.takeWhile(t, p: p)
     }
   }
+  // Not at all likt Haskell's mapState. More of a lensy kind of thing.
+  public func mapState<NewState>(f: NewState -> (State, State -> NewState)) -> StatefulStream<Source, NewState, Element> {
+    let t: (NewState, Source.Generator.Element) -> (NewState, Step<Element>) = { (s,x) in
+      let (r,b) = f(s)
+      let (u,y) = self.transform(r,x)
+      return (b(u), y)
+    }
+    return StatefulStream<Source, NewState, Element>(source: source, size: size, transform: t)
+  }
 }
 
 extension Stream {
@@ -225,3 +234,27 @@ extension Stream: SequenceType {
     }
   }
 }
+
+public struct InfiniteGenerator: GeneratorType {
+  public func next() -> ()? { return () }
+}
+
+public struct InfiniteSequence: SequenceType {
+  public func generate() -> InfiniteGenerator {
+    return InfiniteGenerator()
+  }
+  public init() {}
+}
+
+extension InfiniteSequence {
+  func toStream() -> Stream<InfiniteSequence, Unit, ()> {
+    let t: (Unit, Generator.Element) -> (Unit, Step<Generator.Element>) = { (s,x) in (s, Step.Continue(x)) }
+    let s = StatefulStream(
+      source: self,
+      size: .Infinite,
+      transform: t
+    )
+    return Stream(stateful: s, initialState: Unit())
+  }
+}
+

@@ -394,6 +394,7 @@
 				70F1CF851CDA6343007C4528 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		70F1CF861CDA6343007C4528 /* Build configuration list for PBXNativeTarget "SwiftStreamTests" */ = {
 			isa = XCConfigurationList;
@@ -402,6 +403,7 @@
 				70F1CF881CDA6343007C4528 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -38,9 +38,9 @@ a // Smaller than 10
   .filter { n in n % 2 == 0 }
   .size
 
-var g: AnyGenerator<()> = AnyGenerator { _ in () }
+let i = InfiniteSequence().toStream()
 
-let fibs: Stream<AnyGenerator<()>,(Int,Int),Int> = g
+let fibs = i
   .mapAccum { (t,_) in
     let n = t.0 + t.1
     return ((t.1,n), n)
