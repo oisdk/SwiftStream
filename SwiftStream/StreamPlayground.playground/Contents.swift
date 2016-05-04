@@ -49,4 +49,3 @@ let fibs = i
   }.toStream((0,1))
 
 Array(fibs)
-

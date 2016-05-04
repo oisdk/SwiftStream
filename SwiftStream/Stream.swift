@@ -81,7 +81,7 @@ extension StatefulStream {
       return y.takeWhile(t, p: p)
     }
   }
-  // Not at all likt Haskell's mapState. More of a lensy kind of thing.
+  // Not at all like Haskell's mapState. More of a lensy kind of thing.
   public func mapState<NewState>(f: NewState -> (State, State -> NewState)) -> StatefulStream<Source, NewState, Element> {
     let t: (NewState, Source.Generator.Element) -> (NewState, Step<Element>) = { (s,x) in
       let (r,b) = f(s)
@@ -194,6 +194,21 @@ extension StatefulStream {
       }
     }
     return (state, result)
+  }
+  public func toArray(withState: State) -> (State, [Element]) {
+    var g = source.generate()
+    var a: [Element] = []
+    var s = withState
+    while let next = g.next() {
+      let (t,x) = transform(s, next)
+      s = t
+      switch x {
+      case let .Continue(y): a.append(y)
+      case .Skip: continue
+      case .Stop: break
+      }
+    }
+    return (s, a)
   }
 }
 
