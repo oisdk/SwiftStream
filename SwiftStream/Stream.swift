@@ -51,7 +51,7 @@ extension StatefulStream {
       return (t, y.map(f))
     }
   }
-  public func mapAccum<Result>(f: (State, Element) -> (State, Result)) -> StatefulStream<Source, State, Result> {
+  public func mapAccum<Result>(f: (accumulator: State, element: Element) -> (accumulator: State, result: Result)) -> StatefulStream<Source, State, Result> {
     return StatefulStream<Source, State, Result>(source: source, size: size) { (s,x) in
       let (t,y) = self.transform(s,x)
       return y.map(t, f: f)
@@ -108,7 +108,7 @@ public protocol _UnitType { init() }
 public struct Unit: _UnitType { public init() {} }
 
 public extension Stream where State: _UnitType {
-  public func filterAccum<NewState>(p: (NewState, Element) -> (NewState, Bool)) -> StatefulStream<Source, NewState, Element> {
+  public func filterAccum<NewState>(p: (accumulator: NewState, element: Element) -> (accumulator: NewState, include: Bool)) -> StatefulStream<Source, NewState, Element> {
     let t: (NewState, Source.Generator.Element) -> (NewState, Step<Element>) = { (s,x) in
       let (_,y) = self.stateful.transform(State(),x)
       return y.filter(s, p: p)
@@ -119,7 +119,7 @@ public extension Stream where State: _UnitType {
       transform: t
     )
   }
-  public func takeWhileAccum<NewState>(p: (NewState, Element) -> (NewState, Bool)) -> StatefulStream<Source, NewState, Element> {
+  public func takeWhileAccum<NewState>(p: (accumulator: NewState, element: Element) -> (accumulator: NewState, include: Bool)) -> StatefulStream<Source, NewState, Element> {
     let t: (NewState, Source.Generator.Element) -> (NewState, Step<Element>) = { (s,x) in
       let (_,y) = self.stateful.transform(State(),x)
       return y.takeWhile(s, p: p)
@@ -130,7 +130,7 @@ public extension Stream where State: _UnitType {
       transform: t
     )
   }
-  public func mapAccum<NewState, Result>(f: (NewState, Element) -> (NewState, Result)) -> StatefulStream<Source, NewState, Result> {
+  public func mapAccum<NewState, Result>(f: (accumulator: NewState, element: Element) -> (accumulator: NewState, result: Result)) -> StatefulStream<Source, NewState, Result> {
     let t: (NewState, Source.Generator.Element) -> (NewState, Step<Result>) = { (s,x) in
       let (_,y) = self.stateful.transform(State(),x)
       return y.map(s, f: f)
@@ -165,13 +165,13 @@ extension SequenceType {
     )
     return Stream(stateful: s, initialState: Unit())
   }
-  public func filterAccum<State>(p: (State, Generator.Element) -> (State, Bool)) -> StatefulStream<Self, State, Generator.Element> {
+  public func filterAccum<State>(p: (accumulator: State, element: Generator.Element) -> (accumulator: State, include: Bool)) -> StatefulStream<Self, State, Generator.Element> {
     return toStream().filterAccum(p)
   }
-  public func takeWhileAccum<State>(p: (State, Generator.Element) -> (State, Bool)) -> StatefulStream<Self, State, Generator.Element> {
+  public func takeWhileAccum<State>(p: (accumulator: State, element: Generator.Element) -> (accumulator: State, include: Bool)) -> StatefulStream<Self, State, Generator.Element> {
     return toStream().takeWhileAccum(p)
   }
-  public func mapAccum<State, Result>(f: (State, Generator.Element) -> (State, Result)) -> StatefulStream<Self, State, Result> {
+  public func mapAccum<State, Result>(f: (accumulator: State, element: Generator.Element) -> (accumulator: State, result: Result)) -> StatefulStream<Self, State, Result> {
     return toStream().mapAccum(f)
   }
 }
