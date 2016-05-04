@@ -11,29 +11,33 @@ public enum Step<Element> {
 }
 
 extension Step {
-  func map<State,Result>(withState: State, f: (State, Element) -> (State, Result)) -> (State, Step<Result>) {
-    switch self {
-    case let .Continue(x):
-      let (r,n) = f(withState,x)
-      return (r, .Continue(n))
-    case .Skip: return (withState, .Skip)
-    case .Stop: return (withState, .Stop)
+  func mapState<S,Result>(f: Element -> Stateful<S,Result>) -> Stateful<S,Step<Result>> {
+    return Stateful<S,Step<Result>>{ s in
+      switch self {
+      case let .Continue(x):
+        let (y,n) = f(x).runStateful(s)
+        return (.Continue(y), n)
+      case .Skip: return (.Skip, s)
+      case .Stop: return (.Stop, s)
+      }
     }
   }
-  func condition<State>(def: Step, withState: State, p: (State, Element) -> (State, Bool)) -> (State, Step) {
-    switch self {
-    case let .Continue(x):
-      let (r,b) = p(withState,x)
-      return (r, b ? .Continue(x) : def)
-    case .Skip: return (withState, .Skip)
-    case .Stop: return (withState, .Stop)
+  func conditionState<S>(def: Step, p: Element -> Stateful<S,Bool>) -> Stateful<S,Step> {
+    return Stateful<S,Step> { s in
+      switch self {
+      case let .Continue(x):
+        let (b,n) = p(x).runStateful(s)
+        return (b ? .Continue(x) : def, n)
+      case .Skip: return (.Skip, s)
+      case .Stop: return (.Stop, s)
+      }
     }
   }
-  func filter<State>(withState: State, p: (State, Element) -> (State, Bool)) -> (State, Step) {
-    return condition(.Skip, withState: withState, p: p)
+  func filterState<S>(p: Element -> Stateful<S,Bool>) -> Stateful<S,Step> {
+    return conditionState(.Skip, p: p)
   }
-  func takeWhile<State>(withState: State, p: (State, Element) -> (State, Bool)) -> (State, Step) {
-    return condition(.Stop, withState: withState, p: p)
+  func takeWhileState<S>(p: Element -> Stateful<S,Bool>) -> Stateful<S,Step> {
+    return conditionState(.Stop, p: p)
   }
 }
 

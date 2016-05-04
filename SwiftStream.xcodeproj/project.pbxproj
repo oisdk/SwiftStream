@@ -12,6 +12,8 @@
 		70F1CF7F1CDA6343007C4528 /* SwiftStreamTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F1CF7E1CDA6343007C4528 /* SwiftStreamTests.swift */; };
 		70F1CF8A1CDA6356007C4528 /* Stream.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F1CF891CDA6356007C4528 /* Stream.swift */; };
 		70F1CF8C1CDA67EB007C4528 /* Step.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F1CF8B1CDA67EB007C4528 /* Step.swift */; };
+		70F1CF931CDAA1E6007C4528 /* State.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F1CF921CDAA1E6007C4528 /* State.swift */; };
+		70F5D4951CDAB459008A6F73 /* Utils.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70F5D4941CDAB459008A6F73 /* Utils.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,6 +36,8 @@
 		70F1CF891CDA6356007C4528 /* Stream.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Stream.swift; sourceTree = "<group>"; };
 		70F1CF8B1CDA67EB007C4528 /* Step.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Step.swift; sourceTree = "<group>"; };
 		70F1CF8D1CDA7EE7007C4528 /* StreamPlayground.playground */ = {isa = PBXFileReference; lastKnownFileType = file.playground; path = StreamPlayground.playground; sourceTree = "<group>"; };
+		70F1CF921CDAA1E6007C4528 /* State.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = State.swift; sourceTree = "<group>"; };
+		70F5D4941CDAB459008A6F73 /* Utils.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Utils.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +83,8 @@
 				70F1CF721CDA6342007C4528 /* SwiftStream.h */,
 				70F1CF741CDA6342007C4528 /* Info.plist */,
 				70F1CF891CDA6356007C4528 /* Stream.swift */,
+				70F5D4941CDAB459008A6F73 /* Utils.swift */,
+				70F1CF921CDAA1E6007C4528 /* State.swift */,
 				70F1CF8D1CDA7EE7007C4528 /* StreamPlayground.playground */,
 				70F1CF8B1CDA67EB007C4528 /* Step.swift */,
 			);
@@ -204,6 +210,8 @@
 			files = (
 				70F1CF8A1CDA6356007C4528 /* Stream.swift in Sources */,
 				70F1CF8C1CDA67EB007C4528 /* Step.swift in Sources */,
+				70F1CF931CDAA1E6007C4528 /* State.swift in Sources */,
+				70F5D4951CDAB459008A6F73 /* Utils.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

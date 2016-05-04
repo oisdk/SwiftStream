@@ -17,17 +17,24 @@ s
 //: So what about stateful functions? As a simple example, here's how you would make a stream
 //: of running totals:
 let ss = a.mapAccum { (t,n) in (t+n,t+n) }
+// or
+let sm = a.mapWithState { n in modify { t in t + n } ^> get() }
 //: The type of this is `StatefulStream<[Int], Int, Int>`. The standard functions are also available
 //: on these streams:
 ss.filter { n in n % 2 == 0 }
 //: To get back to a normal stream, you have to give it some initial state:
 ss.toStream(0)
 //: The normal `Stream` type conforms to `SequenceType`.
-Array(
-  a
-    .filterAccum { (s,n) in (n, s < n) } // filter a into ascending order
-    .toStream(0)
-)
+a
+  .filterAccum { (n,s) in (s < n, n) } // filter a into ascending order
+  .toArray(0)
+  .1
+
+a
+  .filterWithState { n in gets { p in p < n } <^ put(n) }
+  .toArray(0)
+  .1
+
 //: The result of the above is `[1, 4, 5, 6, 7, 8]`
 //: Every computation is lazy until the stream is converted into some other form. Also, streams guess
 //: their size:
@@ -41,11 +48,16 @@ a // Smaller than 10
 let i = InfiniteSequence().toStream()
 
 let fibs = i
-  .mapAccum { (t,_) in
+  .mapAccum { (_,t) in
     let n = t.0 + t.1
-    return ((t.1,n), n)
+    return (n,(t.1,n))
   }.takeWhile { n in
     n < 1000
   }.toStream((0,1))
 
 Array(fibs)
+
+let skips = [1, 2, 3, 4, 5, 6, 7, 8].filterWithState { _ in modify(!) ^> get() }
+
+skips.toArray(true ).1
+skips.toArray(false).1
